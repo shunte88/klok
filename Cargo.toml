@@ -1,7 +1,9 @@
 [package]
 name = "klok"
-version = "0.1.0"
+version = "0.1.1"
+authors = "shunte88"
 edition = "2024"
+readme = "README.md"
 
 [dependencies]
 embedded-graphics = "0.7"
