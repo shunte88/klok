@@ -1,7 +1,6 @@
 extern crate machine_ip;
-
 use chrono::{Local, Timelike};
-//use chrono::Local;
+
 use embedded_graphics::{
     mono_font::{ascii::FONT_6X10, MonoTextStyle},
     pixelcolor::BinaryColor,
@@ -91,7 +90,7 @@ fn main() {
         thread::sleep(Duration::from_millis(250));
     }
     // Cleanup on exit
-    println!("Clearing display before exit...");
+    println!("done.");
     display.clear();
     display.flush().unwrap();
 
