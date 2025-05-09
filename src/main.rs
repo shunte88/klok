@@ -1,8 +1,11 @@
+#![deny(unsafe_code)]
+
 extern crate machine_ip;
 use chrono::{Local, Timelike};
 
 use embedded_graphics::{
     mono_font::{ascii::FONT_6X10, MonoTextStyle},
+    mono_font::{ascii::FONT_4X6},
     pixelcolor::BinaryColor,
     prelude::*,
     primitives::{PrimitiveStyle, Rectangle},
@@ -17,6 +20,9 @@ fn main() {
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
+
+    let ts_6_10 = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
+    let ts_4_6 = MonoTextStyle::new(&FONT_4X6, BinaryColor::On);
 
     // Setup signal listener for SIGINT, SIGTERM, SIGHUP
     let mut signals = Signals::new(&[SIGINT, SIGTERM, SIGHUP]).unwrap();
@@ -37,7 +43,6 @@ fn main() {
     display.init().unwrap();
     display.flush().unwrap();
 
-    let style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
     let ww = display.size().width as i32;
 
     while running.load(Ordering::SeqCst) {
@@ -67,26 +72,26 @@ fn main() {
             .unwrap();
 
         // Centered time
-        let time_pos = center_text(&time_string, ww);
-        Text::new(&time_string, Point::new(time_pos, 20), style)
+        let time_pos = center_text(&time_string, 6, ww);
+        Text::new(&time_string, Point::new(time_pos, 20), ts_6_10)
             .draw(&mut display)
             .unwrap();
 
         // Centered date
-        let date_pos = center_text(&date_string, ww);
-        Text::new(&date_string, Point::new(date_pos, 31), style)
+        let date_pos = center_text(&date_string, 4, ww);
+        Text::new(&date_string, Point::new(date_pos, 31), ts_4_6)
             .draw(&mut display)
             .unwrap();
 
         let local_addr = machine_ip::get().unwrap();
         let ip_string = local_addr.to_string();
-        let ip_pos = center_text(&ip_string, ww);
-        Text::new(&ip_string, Point::new(ip_pos, 42), style)
+        let ip_pos = center_text(&ip_string, 6, ww);
+        Text::new(&ip_string, Point::new(ip_pos, 42), ts_6_10)
             .draw(&mut display)
             .unwrap();
 
         display.flush().unwrap();
-        thread::sleep(Duration::from_millis(250));
+        thread::sleep(Duration::from_millis(100));
     }
     // Cleanup on exit
     println!("done.");
@@ -97,8 +102,7 @@ fn main() {
     signal_thread.join().unwrap();
 }
 
-fn center_text(text: &str, width: i32) -> i32 {
-    let char_width = 6; // FONT_6X10 char width
+fn center_text(text: &str, char_width: i32, width: i32) -> i32 {
     let text_width = (text.len() as i32) * char_width;
     (width - text_width) / 2
 }
