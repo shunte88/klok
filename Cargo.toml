@@ -1,0 +1,21 @@
+[package]
+name = "klok"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+embedded-graphics = "0.7"
+embedded-hal = "0.2"
+linux-embedded-hal = "0.3"
+ssd1306 = "0.7"
+chrono = "0.4"
+machine-ip = "0.2.1"
+time = "0.3.41"
+signal-hook = "0.3.17"
+
+[profile.release]
+opt-level = "z"       # prioritize size over speed (or use "s" for balanced)
+lto = true            # enable link-time optimization
+codegen-units = 1     # fewer parallel codegen units, better optimization
+panic = "abort"       # strip panic backtrace machinery
+strip = "debuginfo"   # requires Rust 1.70+, automatically strips symbols

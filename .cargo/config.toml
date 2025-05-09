@@ -1,0 +1,5 @@
+[target.armv7-unknown-linux-musleabihf]
+runner = "cross run --target armv7-unknown-linux-musleabihf"
+
+[target.aarch64-unknown-linux-musl]
+runner = "cross run --target aarch64-unknown-linux-musl"
